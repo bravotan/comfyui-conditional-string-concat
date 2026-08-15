@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-conditional-string-concat"
+version = "0.1.0"
+description = "Concatenate multiple text fields, including only the ones with an enabled checkbox"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Keisuke URAGO", email = "bravo@resourcez.org" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/bravotan/comfyui-conditional-string-concat"
