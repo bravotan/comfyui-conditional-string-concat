@@ -16,6 +16,10 @@ app.registerExtension({
 				node.widgets.find((w) => w.name === name);
 
 			const applyVisibility = () => {
+				// 変更前のサイズを保存
+				const prevSize = [node.size[0], node.size[1]];
+				const prevComputed = node.computeSize();
+
 				for (let i = 1; i <= MAX_SLOTS; i++) {
 					const t = findWidget(`text${i}`);
 					const e = findWidget(`enable${i}`);
@@ -26,7 +30,16 @@ app.registerExtension({
 						w.computeSize = visible ? undefined : () => [0, -4];
 					}
 				}
-				node.setSize(node.computeSize());
+
+				// 変更後の推奨サイズ
+				const newComputed = node.computeSize();
+				const deltaHeight = newComputed[1] - prevComputed[1];
+
+				// 幅はユーザーが広げていればそれを維持(最小幅は下回らないようにする)
+				node.size[0] = Math.max(prevSize[0], newComputed[0]);
+				// 高さは「元のサイズ + 増減分」。ただし推奨サイズより小さくはしない
+				node.size[1] = Math.max(prevSize[1] + deltaHeight, newComputed[1]);
+
 				app.graph.setDirtyCanvas(true, true);
 			};
 
