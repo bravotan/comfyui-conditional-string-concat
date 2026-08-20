@@ -86,8 +86,17 @@ app.registerExtension({
                 setSlotVisibility();
             };
 
-            // 初期化時も表示切り替えのみ、サイズには触らない
+            // 初期化: 表示切り替えを行った上で、新規作成時だけ最小サイズに
+            // スナップさせる。INPUT_TYPES では MAX_SLOTS 分のウィジェットを
+            // 常に登録しているため、hidden を立てる前の時点では
+            // LiteGraph が「全スロット表示」を前提にした初期サイズを
+            // 算出してしまい、新規ノードがやたら縦長で出現する原因になる。
+            // ここで一度だけ setSize しておけば解消できる。
+            // 保存済みワークフローの読み込み時はこの直後に onConfigure が
+            // 呼ばれ、保存されていた node.size で上書きされるため、
+            // ここでの setSize が「勝手に伸びる」不具合を再発させることはない。
             setSlotVisibility();
+            node.setSize(node.computeSize());
         };
     },
 });
